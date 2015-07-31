@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col s12 m12 l10">
+    <div class="card tag-card">
+        <div class="card-slug">
+            <form method="post" action="{{ base_url }}tags/">
+                {% csrf_token %}
+                <p>
+                    <label for="">add tag</label>
+                    <input id="" name="tag" type="text" value="" />
+                </p>
+                <p>
+                    <input type="submit" value="save" class="btn" />
+                </p>
+            </form>
+        </div>
+    </div>
+    {% for t in tags %}
+    <div class="card tag-card" data-id="{{ t.pk }}">
+	    <div class="card-slug activator">
+            <span class="grey-text text-darken-4"><i class="mdi-navigation-more-vert"></i> {{ t.title }}</span>
+			<span class="right">
+                <a href="{{ base_url }}tasks/?q=tag:{{ t.title }}"
+				    <span>
+					    {{ t.tasks.count }} associated tasks
+				    </span>
+                </a>
+			</span>
+	    </div>
+        <div class="card-reveal">
+	        <span class="card-title grey-text text-darken-4">Edit tag <i class="mdi-navigation-close right"></i></span>
+            <form method="post" action="{{ base_url }}tags/{{ t.pk }}/">
+                {% csrf_token %}
+                <p>
+                    <label for="">tag name</label>
+                    <input id="" name="title" type="text" value="{{ t.title }}" />
+                </p>
+                <p>
+                    <input type="submit" value="save" class="btn" />
+                </p>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

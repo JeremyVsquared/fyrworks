@@ -1,0 +1,16 @@
+<ul class="collection">
+	{% for c in task.comments.all %}
+		<li class="collection-item">
+			<p>{{ c.content }}</p>
+			<p class="card-meta font-light">posted by <span class="username">{{ c.created_by }}</span> at {{ task.date_created }}</p>
+		</li>
+	{% endfor %}
+	<li class="collection-item add-comment">
+        <form method="post" action="{{ base_url }}tasks/{{ task.pk }}/comments/">
+            {% csrf_token %}
+			<label for="comment">comment</label>
+			<textarea id="comment" name="comment" class="materialize-textarea" style="padding:0;"></textarea>
+			<input class="btn" type="submit" value="comment">
+        </form>
+	</li>
+</ul>

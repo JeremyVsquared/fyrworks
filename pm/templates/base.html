@@ -1,0 +1,65 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>fyr.works</title>
+<link type="text/css" rel="stylesheet" href="{% static "css/materialize.min.css" %}"  media="screen,projection"/>
+<link type="text/css" rel="stylesheet" href="{% static "css/style.css" %}"/>
+<link type="text/css" rel="stylesheet" href="{% static "plugins/chosen/chosen.min.css" %}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+</head>
+
+<body>
+<header>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <ul class="">
+                    <li{% if dash_active %} class="active"{% endif %}><a href="{{ base_url }}"><i class="mdi-action-view-module"></i></a></li>
+                    <li{% if task_active %} class="active"{% endif %}><a href="{{ base_url }}tasks/">Tasks</a></li>
+                    <li{% if tags_active %} class="active"{% endif %}><a href="{{ base_url }}tags/">Tags</a></li>
+                    <li{% if pics_active %} class="active"{% endif %}><a href="{{ base_url }}analytics/">Analytics</a></li>
+                </ul>
+
+                <ul class="right">
+                    {% if task_active %}
+                    <li><a href="#"><i class="mdi-action-search"></i></a></li>
+                    <li><a href="#"><i class="mdi-content-add"></i></a></li>
+                    {% endif %}
+                    <li{% if settings_active %} class="active"{% endif %}><a href="{{ base_url }}settings/"><i class="mdi-navigation-more-vert"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        {% if task_active %}
+            <div class="stream-loading-graphic center-align">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row stream-container">
+            {% block content %}{% endblock %}
+		</div>
+	</div>
+</main>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "plugins/chosen/chosen.jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/app.js" %}"></script>
+</body>
+</html>

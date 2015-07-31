@@ -1,0 +1,48 @@
+<div class="col s12 m12 l10">			    
+    {% include "task_cards.html" %}
+</div>
+<div class="col hide-on-small-only m3 l2 sidebar">
+	<div class="pinned">
+        {% if q %}
+            <ul class="section meta-list tag-filter-list">
+                {% for f in q_label_list %}
+                    <li><a href="{{ base_url }}tasks/?q={{ f.negated_q }}"><i class="mdi-navigation-close"></i> {{ f.label }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+		<ul class="section meta-list">
+			<li>{{ meta.total }} tasks</li>
+            <li><a href="{{ base_url }}tasks/?q={{ q }},due:late">{{ meta.due_late }} late <i class="mdi-navigation-chevron-right"></i></a></li>
+			<li><a href="{{ base_url }}tasks/?q={{ q }},due:today">{{ meta.due_today }} due today <i class="mdi-navigation-chevron-right"></i></a></li>
+			<li><a href="{{ base_url }}tasks/?q={{ q }},due:week">{{ meta.due_this_week }} due this week <i class="mdi-navigation-chevron-right"></i></a></li>
+			<li><a href="{{ base_url }}tasks/?q={{ q }},priority:high">{{ meta.priority }} marked important <i class="mdi-navigation-chevron-right"></i></a></li>
+		</ul>
+
+        <h5>Notifications</h5>
+        <ul class="section meta-list">
+            {% for n in meta.notifications %}
+                <li class="collection-item avatar">
+                    <a href="{{ n.link }}">
+                        <i class="{{ n.icon }} circle"></i>
+                        {{ n.message|safe }}
+                        <i class="mdi-navigation-chevron-right"></i>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h5>Activity</h5>
+        <ul class="section meta-list">
+            {% for n in meta.stream %}
+                <li class="collection-item avatar">
+                    <a href="{{ n.link }}">
+                        <i class="{{ n.icon }} circle"></i>
+                        {{ n.message|safe }}
+                        <i class="mdi-navigation-chevron-right"></i>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+	</div>
+</div>

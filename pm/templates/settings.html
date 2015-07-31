@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col s12 m12 l10">
+    <div class="card">
+        <div class="card-slug">
+            <span class="card-title grey-text text-darken-4">notifications</span>
+            <form method="post" action="{{ base_url }}settings/">
+                {% csrf_token %}
+                <div class="switch">
+                    <label>
+                        Off
+                        <input type="checkbox" name="notify_task_assigned"{% if settings.notify_task_assigned %} checked{% endif %}>
+                        <span class="lever"></span>
+                        On
+                    </label>
+                    <span>notify me when I'm assigned to a task</span>
+                </div>
+                <div class="switch">
+                    <label>
+                        Off
+                        <input type="checkbox" name="notify_task_comments"{% if settings.notify_task_comments %} checked{% endif %}>
+                        <span class="lever"></span>
+                        On
+                    </label>
+                    <span>notify me of new comments on my tasks</span>
+                </div>
+                <div class="switch">
+                    <label>
+                        Off
+                        <input type="checkbox" name="notify_task_status"{% if settings.notify_task_status %} checked{% endif %}>
+                        <span class="lever"></span>
+                        On
+                    </label>
+                    <span>notify me of status changes</span>
+                </div>
+                <input type="submit" name="update_settings" value="update" class="btn" />
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-slug">
+		    <span class="card-title grey-text text-darken-4">your account</span>
+            <form method="post" action="{{ base_url }}settings/">
+                {% csrf_token %}
+                <p>
+                    <label for="">username</label>
+                    <input id="" name="username" type="text" value="{{ user.username }}" />
+                </p>
+                <p>
+                    <label for="">update password</label>
+                    <input id="" name="password1" type="text" value="" />
+                    <input id="" name="password2" type="text" value="" />
+                </p>
+                <input type="submit" name="update_account" value="update" class="btn" />
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-slug">
+		    <span class="card-title grey-text text-darken-4">your team</span>
+            <form method="post" action="{{ base_url }}settings/">
+                {% csrf_token %}
+                <p>
+                    <label for="">team name</label>
+                    <input id="" name="" type="text" value="{{ group.name }}" />
+                </p>
+                <label>team members</label>
+                <ul class="collection">
+                    {% for m in group.user_set.all %}
+                        <li class="collection-item">{{ m.username }} <span class="right"><a href="#">change role</a> | <a href="#">remove from team</a></span></li>
+                    {% endfor %}
+                    <li class="collection-item">
+                        <label>invite someone to the team</label>
+                        <input type="text" />
+                    </li>
+                </ul>
+                <input type="submit" name="update_team" value="update" class="btn" />
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

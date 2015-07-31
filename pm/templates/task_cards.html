@@ -1,0 +1,89 @@
+<div class="card search-card">
+    <form method="get" action="{{ base_url }}tasks/search/">
+        <span class="card-title grey-text text-darken-4">
+            <i class="mdi-content-filter-list"></i>
+            <input type="text" name="q" value="{{ q }}" />
+            <i class="mdi-navigation-close right"></i>
+        </span>
+        <p>
+            <label for="tag_filter">Tag</label>
+            <select id="tag_filter" name="tag_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="tag:none">None</option>
+                {% for t in tags %}
+                    <option value="tag:{{ t.title }}">{{ t.title }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="assigned_filter">Assigned</label>
+            <select id="assigned_filter" name="assigned_filter" class="filter_select">
+               <option value="">Not specified</option>
+               <option value="assigned:me">Me</option>
+                {% for u in members %}
+                    <option value="assigned:{{ u.username }}">{{ u.username }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="created_filter">Created By</label>
+            <select id="created_filter" name="created_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="created_by:me">Me</option>
+                {% for u in members %}
+                    <option value="created_by:{{ u.username }}">{{ u.username }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="datecreated_filter">Date Created</label>
+            <select id="datecreated_filter" name="datecreated_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="created:today">Today</option>
+                <option value="created:yesterday">Yesterday</option>
+                <option value="created:thisweek">This Week</option>
+            </select>
+        </p>
+        <p>
+            <label for="due_filter">Due</label>
+            <select id="due_filter" name="due_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="due:late">Late</option>
+                <option value="due:today">Today</option>
+                <option value="due:tomorrow">Tomorrow</option>
+                <option value="due:thisweek">This Week</option>
+            </select>
+        </p>
+        <p>
+            <label for="priority_filter">Priority</label>
+            <select id="priority_filter" name="priority_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="priority:low">Low</option>
+                <option value="priority:normal">Normal</option>
+                <option value="priority:high">High</option>
+            </select>
+        </p>
+        <p>
+            <label for="status_filter">Status</label>
+            <select id="status_filter" name="status_filter" class="filter_select">
+                <option value="">Not specified</option>
+                <option value="status:active">Active</option>
+                <option value="status:completed">Completed</option>
+                <option value="status:archived">Archived</option>
+            </select>
+        </p>
+    </form>
+</div>
+<div class="card add-card">
+	<span class="card-title grey-text text-darken-4">Add Task <i class="mdi-navigation-close right"></i></span>
+    <form method="post" action="{{ base_url }}tasks/add/">
+        {% csrf_token %}
+        {{ add_form.as_p }}
+        <p>
+            <input type="submit" value="save" class="btn" />
+        </p>
+    </form>
+</div>
+{% for task in items %}
+	{% include "task_slug.html" %}
+{% endfor %}

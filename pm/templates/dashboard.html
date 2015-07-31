@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3"><a class="active" href="#notifications">Notifications</a></li>
+            <li class="tab col s3"><a href="#activity">Activity</a></li>
+            <li class="tab col s3"><a href="#mine">My Stuff</a></li>
+            <li class="tab col s3"><a href="#due">Due</a></li>
+        </ul>
+    </div>
+    <div id="notifications" class="col s12">
+        <ul class="collection">
+            {% if notificatins.count %}
+                {% for n in notifications %}
+                    <li class="collection-item avatar">
+                        <a href="{{ n.link }}">
+                            <i class="{{ n.icon }} circle teal"></i>
+                            <span class="title">{{ n.message|safe }}</span>
+                            <p>{{ n.date_created }} by {{ n.from_user }}</p>
+                        </a>
+                        <a href="{{ n.dismiss_url }}" class="secondary-content dismiss js-dismiss" title="dismiss"><i class="mdi-content-clear"></i></a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="collection-item avatar valign-wrapper">
+                     <span class="title valign">Nothing to see here. Get busy!</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="activity" class="col s12" style="display:none;">
+        <ul class="collection">
+            {% if stream.count %}
+                {% for i in stream %}
+                    <li class="collection-item avatar">
+                        <a href="{{ i.link }}">
+                            <i class="{{ i.icon }} circle teal"></i>
+                            <span class="title">{{ i.message|safe }}</span>
+                            <p>{{ i.date_created }} by {{ i.from_user }}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="collection-item avatar valign-wrapper">
+                     <span class="title valign">Nothing to see here. Get busy!</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="mine" class="col s12" style="display:none;">
+        <ul class="collection with-header">
+            <li class="collection-header"><h5>High Priority <span class="right">{{ total_important }} total</span></h5></li>
+            {% for i in important %}
+                <li class="collection-item"><a href="{{ base_url }}tasks/#task:{{ i.pk }}">{{ i.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <ul class="collection with-header">
+            <li class="collection-header"><h5>Assigned to me <span class="right">{{ total_assigned_to_me }} total</span></h5></li>
+            {% for i in assigned_to_me %}
+                <li class="collection-item"><a href="{{ base_url }}tasks/#task:{{ i.pk }}">{{ i.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="due" class="col s12" style="display:none;">
+        <ul class="collection with-header">
+            <li class="collection-header"><h5>Due Today <span class="right">{{ total_due_today }} total</span></h5></li>
+            {% for i in due_today %}
+                <li class="collection-item"><a href="{{ base_url }}tasks/#task:{{ i.pk }}">{{ i.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <ul class="collection with-header">
+            <li class="collection-header"><h5>Due This Week <span class="right">{{ total_due_this_week }} total</span></h5></li>
+            {% for i in due_this_week %}
+                <li class="collection-item"><a href="{{ base_url }}tasks/#task:{{ i.pk }}">{{ i.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <ul class="collection with-header">
+            <li class="collection-header"><h5>Late <span class="right">{{ total_due_late }} total</span></h5></li>
+            {% for i in due_late %}
+                <li class="collection-item"><a href="{{ base_url }}tasks/#task:{{ i.pk }}">{{ i.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

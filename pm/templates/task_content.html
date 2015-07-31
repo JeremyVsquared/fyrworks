@@ -1,0 +1,42 @@
+<div class="card-content" display="none">
+	<span class="card-title grey-text activator text-darken-4"><i class="mdi-navigation-more-vert"></i> {{ task.title }}</span>
+	<i class="mdi-navigation-close right unfocus-card"></i>
+	<div class="divider {{ task.priority_color }}"></div>
+	<div class="section">
+		<p class="card-meta">
+			<span>
+				{{ task.comments.count }} comments 
+				{% if task.due %}| due {{ task.due }}{% endif %}
+				| created {{ task.date_created }} by {{ task.created_by }}
+                {% if task.assigned.count %} | assigned to 
+                    {% for u in task.assigned.all %}
+                        {{ u }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
+			</span>
+			<span class="right">
+				{% for tag in task.tags.all %}
+					<a href="{{ base_url }}tasks/?q=tag:{{ tag.title }}" class="tag-link waves-effect waves-light">{{ tag.title }}</a>
+				{% endfor %}
+			</span>
+		</p>
+	</div>
+	<div class="divider"></div>
+	<div class="section">
+		<p>{% if task.description %}{{ task.description }}{% else %}<i>No description</i>{% endif %}</p>
+	</div>
+	<div class="divider"></div>
+	<div class="section">
+		{% include 'task_comments.html' %}
+	</div>
+</div>
+<div class="card-reveal js-edit-card">
+	<span class="card-title grey-text text-darken-4">Edit Task <i class="mdi-navigation-close right"></i></span>
+	<form method="post" action="{{ base_url }}tasks/{{ task.pk }}/">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input type="submit" value="save" class="btn" />
+        </p>
+    </form>
+</div>

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+<script type="text/javascript" src="{% static "js/chart.js" %}"></script>
+
+<div class="col s12 m12 l12">
+    <div class="card blue-grey darken-1">
+        <div class="card-slug white-text">
+            <span class="card-title">Created &amp; Closed tasks per day</span>
+            {% if open_tasks_per_day.count == 0 %}
+                Insufficient data
+            {% else %}
+                <div class="row valign-wrapper">
+                    <div class="col s12">
+                        <div class="canvas-container valign">
+                            <canvas id="per_day_line" />
+                        </div>
+                        <script>
+                            var per_day_data = {
+                                labels: [{{ per_day_labels|safe }}],
+                                datasets: [
+                                    {
+                                        label: "Tasks created",
+                                        fillColor: "rgba(220,220,220,0.2)",
+                                        strokeColor: "rgba(220,220,220,1)",
+                                        pointColor: "rgba(220,220,220,1)",
+                                        pointStrokeColor: "#fff",
+                                        pointHighlightFill: "#fff",
+                                        pointHighlightStroke: "rgba(220,220,220,1)",
+                                        data: [{{ open_tasks_per_day }}]
+                                    },
+                                    {
+                                        label: "Tasks Closed",
+                                        fillColor: "rgba(151,187,205,0.2)",
+                                        strokeColor: "rgba(151,187,205,1)",
+                                        pointColor: "rgba(151,187,205,1)",
+                                        pointStrokeColor: "#fff",
+                                        pointHighlightFill: "#fff",
+                                        pointHighlightStroke: "rgba(151,187,205,1)",
+                                        data: [{{ closed_tasks_per_day }}]
+                                    }
+                                ]
+                            };
+                            var per_day_line_canvas = document.getElementById('per_day_line');
+                            var per_day_line_ctx = per_day_line_canvas.getContext('2d');
+                            var per_day_line_chart = new Chart(per_day_line_ctx).Line(per_day_data, {scaleFontColor: "#FFF", responsive: true});
+                        </script>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-action" style="display:none;">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+        </div>
+    </div>
+
+    <div class="card blue-grey darken-1">
+        <div class="card-slug white-text">
+            <span class="card-title">Open tasks per person</span>
+            {% if open_tasks_per_assignee.count == 0 %}
+                Insufficient data
+            {% else %}
+                <div class="row valign-wrapper">
+                    <div class="col s6">
+                        <div class="canvas-container valign">
+                            <canvas id="per_person_pie" />
+                        </div>
+                        <script>
+                            var per_person_data = [
+                                {% for i in open_tasks_per_assignee %}
+                                    {
+                                        value: {{ i.count }},
+                                        color: "{% cycle '#ee6e73' '#26a69a' '#ffc107' %}",
+                                        highlight: "{% cycle '#f44336' '#00897b' '#ffa000' %}",
+                                        label: "{{ i.assigned__username }}" 
+                                    },
+                                {% endfor %}
+                            ];
+                            var per_person_pie_canvas = document.getElementById('per_person_pie');
+                            var per_person_pie_ctx = per_person_pie_canvas.getContext('2d');
+                            var per_person_pie = new Chart(per_person_pie_ctx).Doughnut(per_person_data);
+                            
+                            per_person_pie_canvas.onclick = function(e) {
+                                var actv = per_person_pie.getSegmentsAtEvent(e);
+                                var base_query = document.location.href.replace('analytics/', 'tasks/?q=');
+                                document.location.href = base_query + 'assigned:' + actv[0].label;
+                            };
+                        </script>
+                    </div>
+                    <div class="col s6">
+                        <table class="bordered">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in open_tasks_per_assignee %}
+                                    <tr>
+                                        <td>{{ i.assigned__username }}</td>
+                                        <td>{{ i.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-action" style="display:none;">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+        </div>
+    </div>
+
+    <div class="card blue-grey darken-1">
+        <div class="card-slug white-text">
+            <span class="card-title">Open tasks per tag</span>
+            {% if open_tasks_per_tag.count == 0 %}
+                Insufficient data
+            {% else %}
+                <div class="row valign-wrapper">
+                    <div class="col s6">
+                        <div class="canvas-container valign">
+                            <canvas id="per_tag_pie" />
+                        </div>
+                        <script>
+                            var per_tag_data = [
+                                {% for i in open_tasks_per_tag %}
+                                    {
+                                        value: {{ i.count }},
+                                        color: "{% cycle '#ee6e73' '#26a69a' '#ffc107' %}",
+                                        highlight: "{% cycle '#f44336' '#00897b' '#ffa000' %}",
+                                        label: "{{ i.tags__title }}" 
+                                    },
+                                {% endfor %}
+                            ];
+                            var per_tag_pie_canvas = document.getElementById('per_tag_pie');
+                            var per_tag_pie_ctx = per_tag_pie_canvas.getContext('2d');
+                            var per_tag_pie = new Chart(per_tag_pie_ctx).Doughnut(per_tag_data);
+
+                            per_tag_pie_canvas.onclick = function(e) {
+                                var actv = per_tag_pie.getSegmentsAtEvent(e);
+                                var base_query = document.location.href.replace('analytics/', 'tasks/?q=');
+                                document.location.href = base_query + 'tag:' + actv[0].label;
+                            };
+                        </script>
+                    </div>
+                    <div class="col s6">
+                        <table class="bordered">
+                            <thead>
+                                <tr>
+                                    <th>Tag</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in open_tasks_per_tag %}
+                                    <tr>
+                                        <td>{{ i.tags__title }}</td>
+                                        <td>{{ i.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-action" style="display:none;">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+        </div>
+    </div>
+
+    <div class="card blue-grey darken-1">
+        <div class="card-slug white-text">
+            <span class="card-title">Open tasks per priority</span>
+            {% if open_tasks_per_priority.count == 0 %}
+                Insufficient data
+            {% else %}
+                <div class="row valign-wrapper">
+                    <div class="col s6">
+                        <div class="canvas-container valign">
+                            <canvas id="per_priority_pie" />
+                        </div>
+                        <script>
+                            var per_priority_data = [
+                                {% for i in open_tasks_per_priority %}
+                                    {
+                                        value: {{ i.count }},
+                                        color: "{% cycle '#ee6e73' '#26a69a' '#ffc107' %}",
+                                        highlight: "{% cycle '#f44336' '#00897b' '#ffa000' %}",
+                                        label: "{{ i.priority }}" 
+                                    },
+                                {% endfor %}
+                            ];
+                            var per_priority_pie_canvas = document.getElementById('per_priority_pie');
+                            var per_priority_pie_ctx = per_priority_pie_canvas.getContext('2d');
+                            var per_priority_pie = new Chart(per_priority_pie_ctx).Doughnut(per_priority_data);
+                            
+                            per_priority_pie_canvas.onclick = function(e) {
+                                var actv = per_priority_pie.getSegmentsAtEvent(e);
+                                var base_query = document.location.href.replace('analytics/', 'tasks/?q=');
+                                document.location.href = base_query + 'priority:' + actv[0].label;
+                            };
+                        </script>
+                    </div>
+                    <div class="col s6">
+                        <table class="bordered">
+                            <thead>
+                                <tr>
+                                    <th>Priority</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in open_tasks_per_priority %}
+                                    <tr>
+                                        <td>{{ i.priority|title }}</td>
+                                        <td>{{ i.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-action" style="display:none;">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

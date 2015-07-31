@@ -1,0 +1,29 @@
+<div class="card" data-id="{{ task.pk }}">
+	<div class="card-slug">
+		<span class="card-title grey-text text-darken-4">{{ task.title }}</span>
+		<div class="divider {{ task.priority_color }}"></div>
+		<div class="section">
+			<p class="card-meta">
+				<span>
+					{{ task.comments.count }} comments 
+					{% if task.due %}| due {{ task.due }}{% endif %}
+					 | created {{ task.date_created }} by {{ task.created_by }}
+                    {% if task.assigned.count %} | assigned to 
+                        {% for u in task.assigned.all %}
+                            {{ u }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% endif %}
+				</span>
+				<span class="right">
+					{% for tag in task.tags.all %}
+						<a href="{{ base_url }}tasks/?q=tag:{{ tag.title }}" class="tag-link waves-effect waves-light">{{ tag.title }}</a>
+					{% endfor %}
+				</span>
+			</p>
+		</div>
+	</div>
+
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+</div>

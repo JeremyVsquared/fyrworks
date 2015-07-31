@@ -1,0 +1,95 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fyr.works</title>
+    <link type="text/css" rel="stylesheet" href="{% static "css/materialize.min.css" %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static "css/style.css" %}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <style>
+        footer.page-footer {margin-top:0;}
+        form.login input[type=text] {display:none;}
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <div class="container">
+            <div class="nav-wrapper">
+                <span class="brand-logo"><a href="/" title="Fyr.works">Fyr.works</a></span>
+                
+                <form action="/login/" method="post" class="login">
+                    {% csrf_token %}
+                    <input type="text" name="username" id="username" placeholder="username" />
+                    <input type="text" name="password" id="password" placeholder="password" />
+                    <input type="submit" class="btn" value="login" />
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="section white">
+        <div class="row container">
+            <form action="/signup/" method="post" class="col s12">
+                {% csrf_token %}
+                {% for e in errors %}
+                    <p class="error">{{ e }}</p>
+                {% endfor %}
+                <div class="input-field col s12">
+                    <input id="team" type="text" class="validate" name="team" />
+                    <label for="team">Team</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="username" type="email" class="validate" name="username" />
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate" name="password" />
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-field col s12">
+                    <input type="submit" class="btn" value="signup" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="row container">
+            <div class="col l6 s12">
+                <h5 class="white-text">{{ page_content.footer_title1 }}</h5>
+                <p class="grey-text text-lighten-4">{{ page_content.footer_content1 }}</p>
+            </div>
+            <div class="col l6 s12">
+                <h5 class="white-text">{{ page_content.footer_title2 }}</h5>
+                <p class="grey-text text-lighten-4">{{ page_content.footer_content2 }}</p>
+            </div>
+        </div>
+    </footer>
+</main>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+    <script>
+    $(document).ready(function () {
+        $('.parallax').parallax();
+
+        // login form
+        $('form.login').on('submit', function (e) {
+            e.preventDefault();
+
+            if ($(this).find('input[type=text]').is(':visible')) {
+                // form form
+
+            } else {
+                // show form
+                var $nav = $(this).parents('nav');
+                var _height = $nav.height();
+                $nav.animate({'height': _height * 4 + 'px'});
+                $(this).animate({'padding-top': _height - 20 + 'px'});
+                $(this).find('input[type=text]').slideDown();
+            }
+        });
+    });
+</script>
+</body>
+</html>
