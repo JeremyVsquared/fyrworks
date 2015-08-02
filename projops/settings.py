@@ -99,7 +99,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['*']
 
 import dj_database_url
 
