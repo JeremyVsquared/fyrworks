@@ -1,1 +1,0 @@
-web: gunicorn fyrworks.wsgi --log-file -
