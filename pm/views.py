@@ -118,6 +118,8 @@ def search(request, group, output_format='html'):
     recent_notifications = Notification.objects.filter(to_user=request.user, dismissed=False, group=g)[:10]
 
     if output_format == 'html':
+        if total is 0:
+            items = [{'title': 'nothing yet'}]
         form = TaskForm()
 
         return render(request, 'task_list.html', {
