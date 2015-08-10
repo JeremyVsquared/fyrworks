@@ -119,7 +119,7 @@ def search(request, group, output_format='html'):
 
     if output_format == 'html':
         if total is 0:
-            items = [{'title': 'nothing yet'}]
+            items = [{'title': 'nothing yet', 'fake': True}]
         form = TaskForm()
 
         return render(request, 'task_list.html', {

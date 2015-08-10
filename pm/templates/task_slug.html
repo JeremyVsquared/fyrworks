@@ -1,6 +1,7 @@
 <div class="card" data-id="{{ task.pk }}">
 	<div class="card-slug">
 		<span class="card-title grey-text text-darken-4">{{ task.title }}</span>
+		{% if not task.fake %}
 		<div class="divider {{ task.priority_color }}"></div>
 		<div class="section">
 			<p class="card-meta">
@@ -21,6 +22,7 @@
 				</span>
 			</p>
 		</div>
+		{% endif %}
 	</div>
 
     <div class="progress">
